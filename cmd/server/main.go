@@ -1,17 +1,23 @@
 package main
 
 import (
+	"context"
 	"flag"
+	"github.com/go-kratos/kratos/v2"
+	shttp "github.com/goxiaoy/go-saas/common/http"
+	"github.com/goxiaoy/go-saas/seed"
+	"github.com/goxiaoy/kit-saas-layout/private/data"
+	"github.com/goxiaoy/uow"
 	"os"
 
-	"github.com/go-kratos/kratos-layout/internal/conf"
-	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	uow2 "github.com/goxiaoy/go-saas-kit/pkg/uow"
+	"github.com/goxiaoy/kit-saas-layout/private/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -30,7 +36,10 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server) *kratos.App {
+func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, seeder seed.Seeder) *kratos.App {
+	if err := seeder.Seed(context.Background()); err != nil {
+		panic(err)
+	}
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -71,7 +80,9 @@ func main() {
 		panic(err)
 	}
 
-	app, cleanup, err := initApp(bc.Server, bc.Data, logger)
+	app, cleanup, err := initApp(bc.Services, bc.Security, &uow.Config{
+		SupportNestedTransaction: false,
+	}, uow2.NewGormConfig(bc.Data.Endpoints, data.ConnName), shttp.NewDefaultWebMultiTenancyOption(), bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}

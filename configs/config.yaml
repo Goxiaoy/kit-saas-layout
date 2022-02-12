@@ -1,15 +1,43 @@
-server:
-  http:
-    addr: 0.0.0.0:8000
-    timeout: 1s
-  grpc:
-    addr: 0.0.0.0:9000
-    timeout: 1s
+services:
+  servers:
+    default:
+      http:
+        timeout: 200s
+        cors:
+          allowed_origins: [ "*" ]
+    github.com/goxiaoy/kit-saas-layout:
+      http:
+        addr: 0.0.0.0:9500
+        csrf:
+          cookie:
+            secure: false
+      grpc:
+        addr: 0.0.0.0:9501
+  services:
+    user:
+      grpc_endpoint: localhost:8501
+    saas:
+      grpc_endpoint: localhost:8521
+  clients:
+    github.com/goxiaoy/kit-saas-layout:
+      client_id: github.com/goxiaoy/kit-saas-layout-golang
+
 data:
-  database:
-    driver: mysql
-    source: root:root@tcp(127.0.0.1:3306)/test
-  redis:
-    addr: 127.0.0.1:6379
-    read_timeout: 0.2s
-    write_timeout: 0.2s
+  endpoints:
+    databases:
+        default:
+          driver: sqlite
+  blobs:
+    user:
+      provider: os
+      public_url: http://localhost:9500
+      base_path: "assets/github.com/goxiaoy/kit-saas-layout"
+      os:
+        dir: "./.temp"
+
+security:
+  jwt:
+    expire_in: 2592000s #    30 days
+    secret: 6efa4458-b245-40a3-9685-6b30d5dcda49
+  security_cookie:
+    hash: gt35ofggk07kdt7ief99bl51avd7pbhe

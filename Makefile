@@ -2,6 +2,7 @@ GOPATH:=$(shell go env GOPATH)
 VERSION=$(shell git describe --tags --always)
 INTERNAL_PROTO_FILES=$(shell find internal -name *.proto)
 API_PROTO_FILES=$(shell find api -name *.proto)
+BUF_VERSION=v1.0.0-rc10
 
 .PHONY: init
 # init env
@@ -11,35 +12,20 @@ init:
 	go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@latest
-	go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.6.1
+	go install github.com/bufbuild/buf/cmd/buf@$(BUF_VERSION)
+	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-breaking@$(BUF_VERSION)
+	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-lint@$(BUF_VERSION)
 
-.PHONY: errors
-# generate errors code
-errors:
-	protoc --proto_path=. \
-               --proto_path=./third_party \
-               --go_out=paths=source_relative:. \
-               --go-errors_out=paths=source_relative:. \
-               $(API_PROTO_FILES)
 
 .PHONY: config
 # generate internal proto
 config:
-	protoc --proto_path=. \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:. \
-	       $(INTERNAL_PROTO_FILES)
+	 buf generate . --path ./private/conf --template buf.config.gen.yaml
 
 .PHONY: api
 # generate api proto
 api:
-	protoc --proto_path=. \
-	       --proto_path=./third_party \
- 	       --go_out=paths=source_relative:. \
- 	       --go-http_out=paths=source_relative:. \
- 	       --go-grpc_out=paths=source_relative:. \
- 	       --openapi_out==paths=source_relative:. \
-	       $(API_PROTO_FILES)
+	buf generate . --path ./api
 
 .PHONY: build
 # build
@@ -49,13 +35,13 @@ build:
 .PHONY: generate
 # generate
 generate:
+	go get -d github.com/google/wire/cmd/wire@v0.5.0
 	go generate ./...
 
 .PHONY: all
 # generate all
 all:
 	make api;
-	make errors;
 	make config;
 	make generate;
 
