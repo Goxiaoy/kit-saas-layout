@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/goxiaoy/go-saas-kit/pkg/authz/authorization"
+	"github.com/goxiaoy/go-saas-kit/pkg/authz/authz"
 
 	"github.com/go-kratos/kratos/v2/log"
 	v1 "github.com/goxiaoy/kit-saas-layout/api/helloworld/v1"
@@ -15,11 +15,11 @@ type GreeterService struct {
 
 	uc   *biz.GreeterUsecase
 	log  *log.Helper
-	auth    authorization.Service
+	auth    authz.Service
 }
 
 // NewGreeterService new a greeter service.
-func NewGreeterService(uc *biz.GreeterUsecase, auth authorization.Service, logger log.Logger) *GreeterService {
+func NewGreeterService(uc *biz.GreeterUsecase, auth authz.Service, logger log.Logger) *GreeterService {
 	return &GreeterService{uc: uc,auth: auth, log: log.NewHelper(logger)}
 }
 

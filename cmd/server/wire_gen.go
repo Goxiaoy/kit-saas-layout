@@ -12,7 +12,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/goxiaoy/go-saas-kit/pkg/api"
 	"github.com/goxiaoy/go-saas-kit/pkg/authn/jwt"
-	"github.com/goxiaoy/go-saas-kit/pkg/authz/authorization"
+	"github.com/goxiaoy/go-saas-kit/pkg/authz/authz"
 	"github.com/goxiaoy/go-saas-kit/pkg/conf"
 	server2 "github.com/goxiaoy/go-saas-kit/pkg/server"
 	uow2 "github.com/goxiaoy/go-saas-kit/pkg/uow"
@@ -39,7 +39,8 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	clientName := _wireClientNameValue
 	saasContributor := api.NewSaasContributor(webMultiTenancyOption)
 	userContributor := api.NewUserContributor()
-	option := api.NewDefaultOption(saasContributor, userContributor)
+	clientContributor := api.NewClientContributor()
+	option := api.NewDefaultOption(saasContributor, userContributor, clientContributor)
 	inMemoryTokenManager := api.NewInMemoryTokenManager(tokenizer)
 	grpcConn, cleanup := api2.NewGrpcConn(clientName, services, option, inMemoryTokenManager, arg...)
 	tenantServiceClient := api2.NewTenantGrpcClient(grpcConn)
@@ -61,9 +62,9 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	apiGrpcConn, cleanup4 := api3.NewGrpcConn(clientName, services, option, inMemoryTokenManager, arg...)
 	permissionServiceClient := api3.NewPermissionGrpcClient(apiGrpcConn)
 	permissionChecker := remote2.NewRemotePermissionChecker(permissionServiceClient)
-	authorizationOption := service.NewAuthorizationOption()
-	subjectResolverImpl := authorization.NewSubjectResolver(authorizationOption)
-	defaultAuthorizationService := authorization.NewDefaultAuthorizationService(permissionChecker, subjectResolverImpl, logger)
+	authzOption := service.NewAuthorizationOption()
+	subjectResolverImpl := authz.NewSubjectResolver(authzOption)
+	defaultAuthorizationService := authz.NewDefaultAuthorizationService(permissionChecker, subjectResolverImpl, logger)
 	greeterService := service.NewGreeterService(greeterUsecase, defaultAuthorizationService, logger)
 	httpServer := server.NewHTTPServer(services, security, tokenizer, tenantStore, manager, decodeRequestFunc, encodeResponseFunc, encodeErrorFunc, factory, confData, webMultiTenancyOption, option, greeterService, logger)
 	grpcServer := server.NewGRPCServer(services, tokenizer, tenantStore, manager, webMultiTenancyOption, option, greeterService, logger)

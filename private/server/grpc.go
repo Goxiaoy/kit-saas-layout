@@ -33,7 +33,7 @@ func NewGRPCServer(c *conf2.Services, tokenizer jwt.Tokenizer, ts common.TenantS
 			metrics.Server(),
 			validate.Validator(),
 			jwt.ServerExtractAndAuth(tokenizer, logger),
-			saas.Server(mOpt, nil, ts),
+			saas.Server(mOpt, ts),
 			api2.ServerMiddleware(apiOpt),
 			uow.Uow(logger, uowMgr),
 		),
