@@ -13,7 +13,7 @@ var ProviderSet = wire.NewSet(NewHTTPServer, NewGRPCServer, NewSeeder, wire.Valu
 
 var ClientName api.ClientName = api2.ServiceName
 
-func NewSeeder( uow uow.Manager) seed.Seeder {
+func NewSeeder(uow uow.Manager) seed.Seeder {
 	var opt = seed.NewSeedOption()
 	// seed host
 	opt.TenantIds = []string{""}

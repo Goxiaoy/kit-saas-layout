@@ -51,15 +51,10 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	encodeResponseFunc := _wireEncodeResponseFuncValue
 	encodeErrorFunc := _wireEncodeErrorFuncValue
 	factory := data.NewBlobFactory(confData)
-	dataData, cleanup3, err := data.NewData(confData, logger)
-	if err != nil {
-		cleanup2()
-		cleanup()
-		return nil, nil, err
-	}
-	greeterRepo := data.NewGreeterRepo(dataData, logger)
+	dbProvider := data.NewProvider(confData, gormConfig, dbOpener, tenantStore, logger)
+	greeterRepo := data.NewGreeterRepo(dbProvider, logger)
 	greeterUsecase := biz.NewGreeterUsecase(greeterRepo, logger)
-	apiGrpcConn, cleanup4 := api3.NewGrpcConn(clientName, services, option, inMemoryTokenManager, arg...)
+	apiGrpcConn, cleanup3 := api3.NewGrpcConn(clientName, services, option, inMemoryTokenManager, arg...)
 	permissionServiceClient := api3.NewPermissionGrpcClient(apiGrpcConn)
 	permissionChecker := remote2.NewRemotePermissionChecker(permissionServiceClient)
 	authzOption := service.NewAuthorizationOption()
@@ -71,7 +66,6 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	seeder := server.NewSeeder(manager)
 	app := newApp(logger, httpServer, grpcServer, seeder)
 	return app, func() {
-		cleanup4()
 		cleanup3()
 		cleanup2()
 		cleanup()

@@ -15,12 +15,12 @@ type GreeterService struct {
 
 	uc   *biz.GreeterUsecase
 	log  *log.Helper
-	auth    authz.Service
+	auth authz.Service
 }
 
 // NewGreeterService new a greeter service.
 func NewGreeterService(uc *biz.GreeterUsecase, auth authz.Service, logger log.Logger) *GreeterService {
-	return &GreeterService{uc: uc,auth: auth, log: log.NewHelper(logger)}
+	return &GreeterService{uc: uc, auth: auth, log: log.NewHelper(logger)}
 }
 
 // SayHello implements helloworld.GreeterServer

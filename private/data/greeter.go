@@ -3,18 +3,19 @@ package data
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/goxiaoy/go-saas/gorm"
 	"github.com/goxiaoy/kit-saas-layout/private/biz"
 )
 
 type greeterRepo struct {
-	data *Data
-	log  *log.Helper
+	Repo
+	log *log.Helper
 }
 
 // NewGreeterRepo .
-func NewGreeterRepo(data *Data, logger log.Logger) biz.GreeterRepo {
+func NewGreeterRepo(dbProvider gorm.DbProvider, logger log.Logger) biz.GreeterRepo {
 	return &greeterRepo{
-		data: data,
+		Repo: Repo{DbProvider: dbProvider},
 		log:  log.NewHelper(logger),
 	}
 }
