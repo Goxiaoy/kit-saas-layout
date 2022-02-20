@@ -17,7 +17,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, gorm.NewDbOpener, suow.NewUowManager, NewBlobFactory, NewProvider, NewGreeterRepo)
+var ProviderSet = wire.NewSet(NewData, gorm.NewDbOpener, suow.NewUowManager, NewBlobFactory, NewProvider, NewMigrate, NewGreeterRepo)
 
 const ConnName = "github.com/goxiaoy/kit-saas-layout"
 

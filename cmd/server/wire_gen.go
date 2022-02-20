@@ -63,9 +63,18 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	greeterService := service.NewGreeterService(greeterUsecase, defaultAuthorizationService, logger)
 	httpServer := server.NewHTTPServer(services, security, tokenizer, tenantStore, manager, decodeRequestFunc, encodeResponseFunc, encodeErrorFunc, factory, confData, webMultiTenancyOption, option, greeterService, logger)
 	grpcServer := server.NewGRPCServer(services, tokenizer, tenantStore, manager, webMultiTenancyOption, option, greeterService, logger)
-	seeder := server.NewSeeder(manager)
+	dataData, cleanup4, err := data.NewData(confData, dbProvider, logger)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	migrate := data.NewMigrate(dataData)
+	seeder := server.NewSeeder(manager, migrate)
 	app := newApp(logger, httpServer, grpcServer, seeder)
 	return app, func() {
+		cleanup4()
 		cleanup3()
 		cleanup2()
 		cleanup()
