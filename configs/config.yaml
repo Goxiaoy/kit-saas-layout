@@ -8,9 +8,6 @@ services:
     github.com/goxiaoy/kit-saas-layout:
       http:
         addr: 0.0.0.0:9500
-        csrf:
-          cookie:
-            secure: false
       grpc:
         addr: 0.0.0.0:9501
   services:
@@ -27,8 +24,10 @@ data:
     databases:
         default:
           driver: sqlite
+          source: "file::memory:?loc=Local"
+          table_prefix: ""
   blobs:
-    user:
+    github.com/goxiaoy/kit-saas-layout:
       provider: os
       public_url: http://localhost:9500
       base_path: "assets/github.com/goxiaoy/kit-saas-layout"

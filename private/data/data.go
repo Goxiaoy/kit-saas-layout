@@ -8,6 +8,7 @@ import (
 	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/memory"
 	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/os"
 	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/s3"
+	kitgorm "github.com/goxiaoy/go-saas-kit/pkg/gorm"
 	suow "github.com/goxiaoy/go-saas-kit/pkg/uow"
 	"github.com/goxiaoy/go-saas/common"
 	"github.com/goxiaoy/go-saas/data"
@@ -17,7 +18,16 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, gorm.NewDbOpener, suow.NewUowManager, NewBlobFactory, NewProvider, NewMigrate, NewGreeterRepo)
+var ProviderSet = wire.NewSet(
+	NewData,
+	kitgorm.NewDbOpener,
+	kitgorm.NewDbProvider,
+	NewConnStrResolver,
+	suow.NewUowManager,
+	NewBlobFactory,
+	NewMigrate,
+	NewPostRepo,
+)
 
 const ConnName = "github.com/goxiaoy/kit-saas-layout"
 
@@ -41,16 +51,8 @@ func NewData(c *conf.Data, dbProvider gorm.DbProvider, logger log.Logger) (*Data
 	}, cleanup, nil
 }
 
-func NewProvider(c *conf.Data, cfg *gorm.Config, opener gorm.DbOpener, ts common.TenantStore, logger log.Logger) gorm.DbProvider {
-	conn := make(data.ConnStrings, 1)
-	for k, v := range c.Endpoints.Databases {
-		conn[k] = v.Source
-	}
-	mr := common.NewMultiTenancyConnStrResolver(func() common.TenantStore {
-		return ts
-	}, data.NewConnStrOption(conn))
-	r := gorm.NewDefaultDbProvider(mr, cfg, opener)
-	return r
+func NewConnStrResolver(c *conf.Data, ts common.TenantStore) data.ConnStrResolver {
+	return kitgorm.NewConnStrResolver(c.Endpoints, ts)
 }
 
 func NewBlobFactory(c *conf.Data) blob.Factory {

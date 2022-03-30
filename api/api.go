@@ -7,7 +7,7 @@ import (
 	"github.com/google/wire"
 	"github.com/goxiaoy/go-saas-kit/pkg/api"
 	"github.com/goxiaoy/go-saas-kit/pkg/conf"
-	v1 "github.com/goxiaoy/kit-saas-layout/api/helloworld/v1"
+	v1 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
 	"google.golang.org/grpc"
 )
 
@@ -24,13 +24,13 @@ func NewHttpClient(clientName api.ClientName, services *conf.Services, opt *api.
 	return api.NewHttpClient(clientName, ServiceName, services, opt, tokenMgr, logger, opts...)
 }
 
-var GrpcProviderSet = wire.NewSet(NewGrpcConn, NewGreetGrpcClient)
-var HttpProviderSet = wire.NewSet(NewHttpClient, NewGreetHttpClient)
+var GrpcProviderSet = wire.NewSet(NewGrpcConn, NewPostGrpcClient)
+var HttpProviderSet = wire.NewSet(NewHttpClient, NewPostHttpClient)
 
-func NewGreetGrpcClient(conn GrpcConn) v1.GreeterClient {
-	return v1.NewGreeterClient(conn)
+func NewPostGrpcClient(conn GrpcConn) v1.PostServiceClient {
+	return v1.NewPostServiceClient(conn)
 }
 
-func NewGreetHttpClient(http HttpClient) v1.GreeterHTTPClient {
-	return v1.NewGreeterHTTPClient(http)
+func NewPostHttpClient(http HttpClient) v1.PostServiceHTTPClient {
+	return v1.NewPostServiceHTTPClient(http)
 }

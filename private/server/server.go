@@ -5,6 +5,7 @@ import (
 	"github.com/goxiaoy/go-saas-kit/pkg/api"
 	"github.com/goxiaoy/go-saas/seed"
 	api2 "github.com/goxiaoy/kit-saas-layout/api"
+	"github.com/goxiaoy/kit-saas-layout/private/biz"
 	"github.com/goxiaoy/kit-saas-layout/private/data"
 	"github.com/goxiaoy/uow"
 )
@@ -14,8 +15,8 @@ var ProviderSet = wire.NewSet(NewHTTPServer, NewGRPCServer, NewSeeder, wire.Valu
 
 var ClientName api.ClientName = api2.ServiceName
 
-func NewSeeder(uow uow.Manager, migrate *data.Migrate) seed.Seeder {
-	var opt = seed.NewSeedOption(seed.NewUowContributor(uow, seed.Chain(migrate)))
+func NewSeeder(uow uow.Manager, migrate *data.Migrate, post *biz.PostSeeder) seed.Seeder {
+	var opt = seed.NewSeedOption(seed.NewUowContributor(uow, seed.Chain(migrate, post)))
 	// seed host
 	opt.TenantIds = []string{""}
 

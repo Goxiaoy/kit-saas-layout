@@ -9,6 +9,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	api2 "github.com/goxiaoy/go-saas-kit/pkg/api"
+	sapi "github.com/goxiaoy/go-saas-kit/pkg/api"
 	"github.com/goxiaoy/go-saas-kit/pkg/authn/jwt"
 	conf2 "github.com/goxiaoy/go-saas-kit/pkg/conf"
 	"github.com/goxiaoy/go-saas-kit/pkg/server"
@@ -16,14 +17,23 @@ import (
 	"github.com/goxiaoy/go-saas/common"
 	"github.com/goxiaoy/go-saas/common/http"
 	"github.com/goxiaoy/kit-saas-layout/api"
-	v1 "github.com/goxiaoy/kit-saas-layout/api/helloworld/v1"
+	v12 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
 	"github.com/goxiaoy/kit-saas-layout/private/service"
 	uow2 "github.com/goxiaoy/uow"
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf2.Services, tokenizer jwt.Tokenizer, ts common.TenantStore, uowMgr uow2.Manager,
-	mOpt *http.WebMultiTenancyOption, apiOpt *api2.Option, greeter *service.GreeterService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(
+	c *conf2.Services,
+	tokenizer jwt.Tokenizer,
+	ts common.TenantStore,
+	uowMgr uow2.Manager,
+	mOpt *http.WebMultiTenancyOption,
+	apiOpt *api2.Option,
+	post *service.PostServiceService,
+	validator sapi.TrustedContextValidator,
+	logger log.Logger,
+) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -32,13 +42,13 @@ func NewGRPCServer(c *conf2.Services, tokenizer jwt.Tokenizer, ts common.TenantS
 			metrics.Server(),
 			validate.Validator(),
 			jwt.ServerExtractAndAuth(tokenizer, logger),
-			api2.ServerMiddleware(apiOpt, logger),
-			server.Saas(mOpt, ts),
+			sapi.ServerPropagation(apiOpt, validator, logger),
+			server.Saas(mOpt, ts, validator),
 			uow.Uow(logger, uowMgr),
 		),
 	}
 	opts = server.PatchGrpcOpts(logger, opts, api.ServiceName, c)
 	srv := grpc.NewServer(opts...)
-	v1.RegisterGreeterServer(srv, greeter)
+	v12.RegisterPostServiceServer(srv, post)
 	return srv
 }

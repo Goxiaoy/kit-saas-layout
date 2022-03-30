@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package post.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/field_mask.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "query/operation.proto";
+
+option go_package = "github.com/goxiaoy/kit-saas-layout/api/post/v1;v1";
+
+service PostService {
+  rpc ListPost (ListPostRequest) returns (ListPostReply){
+    option (google.api.http) = {
+      get: "/v1/github.com/goxiaoy/kit-saas-layout/posts",
+      additional_bindings:{
+        post:"/v1/github.com/goxiaoy/kit-saas-layout/post/list",
+        body:"*"
+      }
+    };
+  }
+  rpc GetPost (GetPostRequest) returns (Post){
+    option (google.api.http) = {
+      get: "/v1/github.com/goxiaoy/kit-saas-layout/post/{id}"
+    };
+  }
+  rpc CreatePost (CreatePostRequest) returns (Post){
+    option (google.api.http) = {
+      post: "/v1/github.com/goxiaoy/kit-saas-layout/post",
+      body: "*"
+    };
+  }
+  rpc UpdatePost (UpdatePostRequest) returns (Post){
+    option (google.api.http) = {
+      put: "/v1/github.com/goxiaoy/kit-saas-layout/post/{post.id}",
+      body: "*"
+      additional_bindings{
+        patch: "/v1/github.com/goxiaoy/kit-saas-layout/post/{post.id}",
+        body: "*"
+      }
+    };
+  }
+  rpc DeletePost (DeletePostRequest) returns (DeletePostReply){
+    option (google.api.http) = {
+      delete: "/v1/github.com/goxiaoy/kit-saas-layout/post/{id}"
+    };
+  }
+
+}
+
+message CreatePostRequest {
+  string name =1 [(validate.rules).string.min_len=1,(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdatePostRequest {
+  UpdatePost post=1 [(validate.rules).message.required=true,(google.api.field_behavior) = REQUIRED];
+  google.protobuf.FieldMask update_mask = 2;
+}
+
+message UpdatePost{
+  string id=1 [(validate.rules).string.min_len=1,(google.api.field_behavior) = REQUIRED];
+  string name=2;
+}
+
+
+message DeletePostRequest {
+  string id=1;
+}
+message DeletePostReply {
+  string id=1;
+  string name=2;
+}
+
+message GetPostRequest {
+  string id=1 [(validate.rules).string.min_len=1,(google.api.field_behavior)=REQUIRED];
+}
+
+message PostFilter{
+  query.operation.StringFilterOperation id=1;
+  query.operation.StringFilterOperation name =2;
+}
+message ListPostRequest {
+  int32 page_offset =1;
+  int32 page_size = 2;
+  string search = 3;
+  repeated string sort =4;
+  google.protobuf.FieldMask fields=5;
+  PostFilter filter =6;
+}
+message ListPostReply {
+  int32 total_size =1;
+  int32 filter_size =2;
+  repeated Post items=3;
+}
+message Post{
+  string id=1;
+  string name=2;
+  google.protobuf.Timestamp created_at =4;
+}
