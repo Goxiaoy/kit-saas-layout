@@ -4,11 +4,16 @@ import (
 	"context"
 	"flag"
 	"github.com/go-kratos/kratos/v2"
+	"github.com/goxiaoy/go-saas-kit/pkg/gorm"
+	"github.com/goxiaoy/go-saas-kit/pkg/server"
+	"github.com/goxiaoy/go-saas-kit/pkg/tracers"
 	shttp "github.com/goxiaoy/go-saas/common/http"
 	"github.com/goxiaoy/go-saas/seed"
+	"github.com/goxiaoy/kit-saas-layout/api"
 	"github.com/goxiaoy/kit-saas-layout/private/data"
 	"github.com/goxiaoy/uow"
 	"os"
+	"strings"
 
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -16,14 +21,13 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	uow2 "github.com/goxiaoy/go-saas-kit/pkg/uow"
 	"github.com/goxiaoy/kit-saas-layout/private/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
 	// Name is the name of the compiled software.
-	Name string
+	Name string = strings.ToUpper(api.ServiceName)
 	// Version is the version of the compiled software.
 	Version string
 	// flagconf is the config flag.
@@ -37,7 +41,7 @@ func init() {
 }
 
 func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, seeder seed.Seeder) *kratos.App {
-	if err := seeder.Seed(context.Background()); err != nil {
+	if err := seeder.Seed(context.Background(), seed.NewSeedOption().WithTenantId("")); err != nil {
 		panic(err)
 	}
 	return kratos.New(
@@ -55,15 +59,7 @@ func newApp(logger log.Logger, hs *http.Server, gs *grpc.Server, seeder seed.See
 
 func main() {
 	flag.Parse()
-	logger := log.With(log.NewStdLogger(os.Stdout),
-		"ts", log.DefaultTimestamp,
-		"caller", log.DefaultCaller,
-		"service.id", id,
-		"service.name", Name,
-		"service.version", Version,
-		"trace_id", tracing.TraceID(),
-		"span_id", tracing.SpanID(),
-	)
+
 	c := config.New(
 		config.WithSource(
 			file.NewSource(flagconf),
@@ -80,9 +76,24 @@ func main() {
 		panic(err)
 	}
 
+	logger := log.With(server.PatchFilter(log.NewStdLogger(os.Stdout), bc.Logging),
+		"ts", log.DefaultTimestamp,
+		"caller", log.DefaultCaller,
+		"service.id", id,
+		"service.name", Name,
+		"service.version", Version,
+		"trace_id", tracing.TraceID(),
+		"span_id", tracing.SpanID(),
+	)
+
+	shutdown, err := tracers.SetTracerProvider(context.Background(), bc.Tracing, Name)
+	if err != nil {
+		log.Error(err)
+	}
+	defer shutdown()
 	app, cleanup, err := initApp(bc.Services, bc.Security, &uow.Config{
 		SupportNestedTransaction: false,
-	}, uow2.NewGormConfig(bc.Data.Endpoints, data.ConnName), shttp.NewDefaultWebMultiTenancyOption(), bc.Data, logger)
+	}, gorm.NewGormConfig(bc.Data.Endpoints, data.ConnName), shttp.NewDefaultWebMultiTenancyOption(), bc.Data, logger)
 	if err != nil {
 		panic(err)
 	}
