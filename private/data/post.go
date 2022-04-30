@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"fmt"
+	"github.com/goxiaoy/go-eventbus"
 	kitgorm "github.com/goxiaoy/go-saas-kit/pkg/gorm"
 	sgorm "github.com/goxiaoy/go-saas/gorm"
 	v1 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
@@ -14,9 +15,9 @@ type PostRepo struct {
 	*kitgorm.Repo[biz.Post, string, v1.ListPostRequest]
 }
 
-func NewPostRepo(dbProvider sgorm.DbProvider) biz.PostRepo {
+func NewPostRepo(dbProvider sgorm.DbProvider, eventbus *eventbus.EventBus) biz.PostRepo {
 	res := &PostRepo{}
-	res.Repo = kitgorm.NewRepo[biz.Post, string, v1.ListPostRequest](dbProvider, res)
+	res.Repo = kitgorm.NewRepo[biz.Post, string, v1.ListPostRequest](dbProvider, eventbus, res)
 	return res
 }
 

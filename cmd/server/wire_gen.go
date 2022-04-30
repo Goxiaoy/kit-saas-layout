@@ -10,6 +10,7 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/goxiaoy/go-eventbus"
 	"github.com/goxiaoy/go-saas-kit/pkg/api"
 	"github.com/goxiaoy/go-saas-kit/pkg/authn/jwt"
 	"github.com/goxiaoy/go-saas-kit/pkg/authz/authz"
@@ -51,7 +52,8 @@ func initApp(services *conf.Services, security *conf.Security, config *uow.Confi
 	factory := data.NewBlobFactory(confData)
 	connStrResolver := data.NewConnStrResolver(confData, tenantStore)
 	dbProvider := gorm2.NewDbProvider(connStrResolver, gormConfig, dbOpener)
-	postRepo := data.NewPostRepo(dbProvider)
+	eventBus := _wireEventBusValue
+	postRepo := data.NewPostRepo(dbProvider, eventBus)
 	apiGrpcConn, cleanup3 := api3.NewGrpcConn(clientName, services, option, inMemoryTokenManager, logger, arg...)
 	permissionServiceClient := api3.NewPermissionGrpcClient(apiGrpcConn)
 	permissionChecker := remote2.NewRemotePermissionChecker(permissionServiceClient)
@@ -86,4 +88,5 @@ var (
 	_wireDecodeRequestFuncValue  = server2.ReqDecode
 	_wireEncodeResponseFuncValue = server2.ResEncoder
 	_wireEncodeErrorFuncValue    = server2.ErrEncoder
+	_wireEventBusValue           = eventbus.Default
 )

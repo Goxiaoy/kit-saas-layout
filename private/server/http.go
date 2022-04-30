@@ -66,7 +66,7 @@ func NewHTTPServer(c *conf2.Services,
 
 	//handle swagger
 	router := mux.NewRouter()
-	router.Use(server.MiddlewareConvert(
+	router.Use(server.MiddlewareConvert(errEncoder,
 		recovery.Recovery(),
 		tracing.Server(),
 		logging.Server(logger),

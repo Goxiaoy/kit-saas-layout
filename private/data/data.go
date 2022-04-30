@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
+	"github.com/goxiaoy/go-eventbus"
 	"github.com/goxiaoy/go-saas-kit/pkg/blob"
 	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/memory"
 	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/os"
@@ -21,6 +22,7 @@ import (
 var ProviderSet = wire.NewSet(
 	NewData,
 	kitgorm.NewDbOpener,
+	wire.Value(eventbus.Default),
 	kitgorm.NewDbProvider,
 	NewConnStrResolver,
 	suow.NewUowManager,

@@ -71,6 +71,7 @@ func (m *CreatePostRequest) validate(all bool) error {
 	if len(errors) > 0 {
 		return CreatePostRequestMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -241,6 +242,7 @@ func (m *UpdatePostRequest) validate(all bool) error {
 	if len(errors) > 0 {
 		return UpdatePostRequestMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -355,6 +357,7 @@ func (m *UpdatePost) validate(all bool) error {
 	if len(errors) > 0 {
 		return UpdatePostMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -455,6 +458,7 @@ func (m *DeletePostRequest) validate(all bool) error {
 	if len(errors) > 0 {
 		return DeletePostRequestMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -560,6 +564,7 @@ func (m *DeletePostReply) validate(all bool) error {
 	if len(errors) > 0 {
 		return DeletePostReplyMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -670,6 +675,7 @@ func (m *GetPostRequest) validate(all bool) error {
 	if len(errors) > 0 {
 		return GetPostRequestMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -827,6 +833,7 @@ func (m *PostFilter) validate(all bool) error {
 	if len(errors) > 0 {
 		return PostFilterMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -989,6 +996,7 @@ func (m *ListPostRequest) validate(all bool) error {
 	if len(errors) > 0 {
 		return ListPostRequestMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -1126,6 +1134,7 @@ func (m *ListPostReply) validate(all bool) error {
 	if len(errors) > 0 {
 		return ListPostReplyMultiError(errors)
 	}
+
 	return nil
 }
 
@@ -1257,6 +1266,7 @@ func (m *Post) validate(all bool) error {
 	if len(errors) > 0 {
 		return PostMultiError(errors)
 	}
+
 	return nil
 }
 
