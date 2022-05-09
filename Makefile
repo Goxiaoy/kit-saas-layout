@@ -12,6 +12,7 @@ init:
 	go install github.com/go-kratos/kratos/cmd/kratos/v2@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2@latest
 	go install github.com/go-kratos/kratos/cmd/protoc-gen-go-errors/v2@latest
+	go install github.com/goxiaoy/go-saas-kit/cmd/protoc-gen-go-errors-i18n/v2@main
 	go install github.com/bufbuild/buf/cmd/buf@$(BUF_VERSION)
 	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-breaking@$(BUF_VERSION)
 	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-lint@$(BUF_VERSION)

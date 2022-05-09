@@ -16,12 +16,14 @@ import (
 	"github.com/goxiaoy/go-saas-kit/pkg/authn/jwt"
 	"github.com/goxiaoy/go-saas-kit/pkg/blob"
 	conf2 "github.com/goxiaoy/go-saas-kit/pkg/conf"
+	"github.com/goxiaoy/go-saas-kit/pkg/localize"
 	"github.com/goxiaoy/go-saas-kit/pkg/server"
 	"github.com/goxiaoy/go-saas-kit/pkg/uow"
 	"github.com/goxiaoy/go-saas/common"
 	shttp "github.com/goxiaoy/go-saas/common/http"
 	"github.com/goxiaoy/kit-saas-layout/api"
 	v12 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
+	"github.com/goxiaoy/kit-saas-layout/i18n"
 	"github.com/goxiaoy/kit-saas-layout/private/conf"
 	"github.com/goxiaoy/kit-saas-layout/private/service"
 	uow2 "github.com/goxiaoy/uow"
@@ -55,6 +57,7 @@ func NewHTTPServer(c *conf2.Services,
 			tracing.Server(),
 			logging.Server(logger),
 			metrics.Server(),
+			localize.I18N(i18n.Files...),
 			validate.Validator(),
 			jwt.ServerExtractAndAuth(tokenizer, logger),
 			sapi.ServerPropagation(apiOpt, validator, logger),
