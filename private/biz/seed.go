@@ -2,13 +2,13 @@ package biz
 
 import (
 	"context"
-	"github.com/goxiaoy/go-saas/seed"
+	"github.com/go-saas/saas/seed"
 )
 
 type PostSeeder struct {
 }
 
-var _ seed.Contributor = (*PostSeeder)(nil)
+var _ seed.Contrib = (*PostSeeder)(nil)
 
 func NewPostSeeder() *PostSeeder {
 	return &PostSeeder{}

@@ -1,6 +1,8 @@
 package biz
 
-import "github.com/google/wire"
+import (
+	kitdi "github.com/go-saas/kit/pkg/di"
+)
 
 // ProviderSet is biz providers.
-var ProviderSet = wire.NewSet(NewPostSeeder)
+var ProviderSet = kitdi.NewSet(NewPostSeeder)

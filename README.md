@@ -30,15 +30,6 @@ make api
 # Generate all files
 make all
 ```
-## Automated Initialization (wire)
-```
-# install wire
-go get github.com/google/wire/cmd/wire
-
-# generate wire
-cd cmd/server
-wire
-```
 
 ## Docker
 ```bash

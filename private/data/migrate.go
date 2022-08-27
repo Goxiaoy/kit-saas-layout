@@ -2,8 +2,8 @@ package data
 
 import (
 	"context"
-	"github.com/goxiaoy/go-saas/seed"
-	"github.com/goxiaoy/kit-saas-layout/private/biz"
+	"github.com/go-saas/kit-layout/private/biz"
+	"github.com/go-saas/saas/seed"
 	"gorm.io/gorm"
 )
 

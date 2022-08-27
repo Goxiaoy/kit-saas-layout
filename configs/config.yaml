@@ -5,19 +5,20 @@ services:
         timeout: 200s
         cors:
           allowed_origins: [ "*" ]
-    github.com/goxiaoy/kit-saas-layout:
+    github.com/go-saas/kit-layout:
       http:
         addr: 0.0.0.0:9500
       grpc:
         addr: 0.0.0.0:9501
   services:
-    user:
-      grpc_endpoint: localhost:8501
-    saas:
-      grpc_endpoint: localhost:8521
+    user: {}
+    saas: {}
   clients:
-    github.com/goxiaoy/kit-saas-layout:
-      client_id: github.com/goxiaoy/kit-saas-layout-golang
+    github.com/go-saas/kit-layout:
+      client_id: github.com/go-saas/kit-layout-golang
+  registry:
+    type: etcd
+    endpoint: http://localhost:3379
 
 data:
   endpoints:
@@ -27,10 +28,10 @@ data:
           source: "file::memory:?loc=Local"
           table_prefix: ""
   blobs:
-    github.com/goxiaoy/kit-saas-layout:
+    github.com/go-saas/kit-layout:
       provider: os
       public_url: http://localhost:9500
-      base_path: "assets/github.com/goxiaoy/kit-saas-layout"
+      base_path: "assets/github.com/go-saas/kit-layout"
       os:
         dir: "./.temp"
 

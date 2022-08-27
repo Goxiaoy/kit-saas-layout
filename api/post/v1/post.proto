@@ -9,7 +9,7 @@ import "google/api/field_behavior.proto";
 import "validate/validate.proto";
 import "query/operation.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
-option go_package = "github.com/goxiaoy/kit-saas-layout/api/post/v1;v1";
+option go_package = "github.com/go-saas/kit-layout/api/post/v1;v1";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   security_definitions: {
@@ -33,37 +33,37 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service PostService {
   rpc ListPost (ListPostRequest) returns (ListPostReply){
     option (google.api.http) = {
-      get: "/v1/github.com/goxiaoy/kit-saas-layout/posts",
+      get: "/v1/github.com/go-saas/kit-layout/posts",
       additional_bindings:{
-        post:"/v1/github.com/goxiaoy/kit-saas-layout/post/list",
+        post:"/v1/github.com/go-saas/kit-layout/post/list",
         body:"*"
       }
     };
   }
   rpc GetPost (GetPostRequest) returns (Post){
     option (google.api.http) = {
-      get: "/v1/github.com/goxiaoy/kit-saas-layout/post/{id}"
+      get: "/v1/github.com/go-saas/kit-layout/post/{id}"
     };
   }
   rpc CreatePost (CreatePostRequest) returns (Post){
     option (google.api.http) = {
-      post: "/v1/github.com/goxiaoy/kit-saas-layout/post",
+      post: "/v1/github.com/go-saas/kit-layout/post",
       body: "*"
     };
   }
   rpc UpdatePost (UpdatePostRequest) returns (Post){
     option (google.api.http) = {
-      put: "/v1/github.com/goxiaoy/kit-saas-layout/post/{post.id}",
+      put: "/v1/github.com/go-saas/kit-layout/post/{post.id}",
       body: "*"
       additional_bindings{
-        patch: "/v1/github.com/goxiaoy/kit-saas-layout/post/{post.id}",
+        patch: "/v1/github.com/go-saas/kit-layout/post/{post.id}",
         body: "*"
       }
     };
   }
   rpc DeletePost (DeletePostRequest) returns (DeletePostReply){
     option (google.api.http) = {
-      delete: "/v1/github.com/goxiaoy/kit-saas-layout/post/{id}"
+      delete: "/v1/github.com/go-saas/kit-layout/post/{id}"
     };
   }
 

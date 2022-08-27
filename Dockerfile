@@ -21,4 +21,4 @@ EXPOSE 8000
 EXPOSE 9000
 VOLUME /data/conf
 
-CMD ["./github.com/goxiaoy/kit-saas-layout", "-conf", "/data/conf"]
+CMD ["./github.com/go-saas/kit-layout", "-conf", "/data/conf"]

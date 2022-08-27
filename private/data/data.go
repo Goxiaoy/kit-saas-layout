@@ -3,35 +3,23 @@ package data
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/google/wire"
-	"github.com/goxiaoy/go-eventbus"
-	"github.com/goxiaoy/go-saas-kit/pkg/blob"
-	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/memory"
-	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/os"
-	_ "github.com/goxiaoy/go-saas-kit/pkg/blob/s3"
-	kitgorm "github.com/goxiaoy/go-saas-kit/pkg/gorm"
-	suow "github.com/goxiaoy/go-saas-kit/pkg/uow"
-	"github.com/goxiaoy/go-saas/common"
-	"github.com/goxiaoy/go-saas/data"
-	"github.com/goxiaoy/go-saas/gorm"
-	"github.com/goxiaoy/kit-saas-layout/private/conf"
+	_ "github.com/go-saas/kit/pkg/blob/memory"
+	_ "github.com/go-saas/kit/pkg/blob/os"
+	_ "github.com/go-saas/kit/pkg/blob/s3"
+	conf2 "github.com/go-saas/kit/pkg/conf"
+	kitdi "github.com/go-saas/kit/pkg/di"
+	"github.com/go-saas/saas/gorm"
 	g "gorm.io/gorm"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(
+var ProviderSet = kitdi.NewSet(
 	NewData,
-	kitgorm.NewDbOpener,
-	wire.Value(eventbus.Default),
-	kitgorm.NewDbProvider,
-	NewConnStrResolver,
-	suow.NewUowManager,
-	NewBlobFactory,
 	NewMigrate,
 	NewPostRepo,
 )
 
-const ConnName = "github.com/goxiaoy/kit-saas-layout"
+const ConnName = "github.com/go-saas/kit-layout"
 
 // Data .
 type Data struct {
@@ -44,19 +32,11 @@ func GetDb(ctx context.Context, provider gorm.DbProvider) *g.DB {
 }
 
 // NewData .
-func NewData(c *conf.Data, dbProvider gorm.DbProvider, logger log.Logger) (*Data, func(), error) {
+func NewData(c *conf2.Data, dbProvider gorm.DbProvider, logger log.Logger) (*Data, func(), error) {
 	cleanup := func() {
 		logger.Log(log.LevelInfo, "closing the data resources")
 	}
 	return &Data{
 		DbProvider: dbProvider,
 	}, cleanup, nil
-}
-
-func NewConnStrResolver(c *conf.Data, ts common.TenantStore) data.ConnStrResolver {
-	return kitgorm.NewConnStrResolver(c.Endpoints, ts)
-}
-
-func NewBlobFactory(c *conf.Data) blob.Factory {
-	return blob.NewFactory(c.Blobs)
 }

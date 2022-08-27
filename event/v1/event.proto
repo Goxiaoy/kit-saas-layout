@@ -1,0 +1,8 @@
+syntax = "proto3";
+package kratos.api;
+
+option go_package = "github.com/go-saas/kit-layout/event/v1;v1";
+
+message DemoEvent{
+
+}

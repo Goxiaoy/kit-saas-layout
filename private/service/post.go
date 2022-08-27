@@ -3,24 +3,24 @@ package service
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/errors"
-	"github.com/goxiaoy/go-saas-kit/pkg/authz/authz"
-	pb "github.com/goxiaoy/kit-saas-layout/api/post/v1"
-	"github.com/goxiaoy/kit-saas-layout/private/biz"
+	pb "github.com/go-saas/kit-layout/api/post/v1"
+	"github.com/go-saas/kit-layout/private/biz"
+	"github.com/go-saas/kit/pkg/authz/authz"
 	"github.com/samber/lo"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type PostServiceService struct {
+type PostService struct {
 	pb.UnimplementedPostServiceServer
 	repo biz.PostRepo
 	auth authz.Service
 }
 
-func NewPostServiceService(repo biz.PostRepo, auth authz.Service) *PostServiceService {
-	return &PostServiceService{repo: repo, auth: auth}
+func NewPostService(repo biz.PostRepo, auth authz.Service) *PostService {
+	return &PostService{repo: repo, auth: auth}
 }
 
-func (s *PostServiceService) ListPost(ctx context.Context, req *pb.ListPostRequest) (*pb.ListPostReply, error) {
+func (s *PostService) ListPost(ctx context.Context, req *pb.ListPostRequest) (*pb.ListPostReply, error) {
 	ret := &pb.ListPostReply{}
 
 	totalCount, filterCount, err := s.repo.Count(ctx, req)
@@ -43,7 +43,7 @@ func (s *PostServiceService) ListPost(ctx context.Context, req *pb.ListPostReque
 	ret.Items = rItems
 	return ret, nil
 }
-func (s *PostServiceService) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.Post, error) {
+func (s *PostService) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.Post, error) {
 	g, err := s.repo.Get(ctx, req.GetId())
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *PostServiceService) GetPost(ctx context.Context, req *pb.GetPostRequest
 	MapBizPost2Pb(g, res)
 	return res, nil
 }
-func (s *PostServiceService) CreatePost(ctx context.Context, req *pb.CreatePostRequest) (*pb.Post, error) {
+func (s *PostService) CreatePost(ctx context.Context, req *pb.CreatePostRequest) (*pb.Post, error) {
 	e := &biz.Post{}
 	MapCreatePbPost2Biz(req, e)
 	err := s.repo.Create(ctx, e)
@@ -66,7 +66,7 @@ func (s *PostServiceService) CreatePost(ctx context.Context, req *pb.CreatePostR
 	MapBizPost2Pb(e, res)
 	return res, nil
 }
-func (s *PostServiceService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.Post, error) {
+func (s *PostService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.Post, error) {
 	g, err := s.repo.Get(ctx, req.Post.Id)
 	if err != nil {
 		return nil, err
@@ -83,7 +83,7 @@ func (s *PostServiceService) UpdatePost(ctx context.Context, req *pb.UpdatePostR
 	MapBizPost2Pb(g, res)
 	return res, nil
 }
-func (s *PostServiceService) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.DeletePostReply, error) {
+func (s *PostService) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.DeletePostReply, error) {
 	g, err := s.repo.Get(ctx, req.Id)
 	if err != nil {
 		return nil, err

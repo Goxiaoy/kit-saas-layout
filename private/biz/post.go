@@ -1,9 +1,9 @@
 package biz
 
 import (
-	"github.com/goxiaoy/go-saas-kit/pkg/data"
-	"github.com/goxiaoy/go-saas-kit/pkg/gorm"
-	v1 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
+	v1 "github.com/go-saas/kit-layout/api/post/v1"
+	"github.com/go-saas/kit/pkg/data"
+	"github.com/go-saas/kit/pkg/gorm"
 )
 
 type Post struct {

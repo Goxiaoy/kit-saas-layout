@@ -1,20 +1,40 @@
 package server
 
 import (
-	"github.com/google/wire"
-	"github.com/goxiaoy/go-saas-kit/pkg/api"
-	"github.com/goxiaoy/go-saas/seed"
-	api2 "github.com/goxiaoy/kit-saas-layout/api"
-	"github.com/goxiaoy/kit-saas-layout/private/biz"
-	"github.com/goxiaoy/kit-saas-layout/private/data"
-	"github.com/goxiaoy/uow"
+	"github.com/go-kratos/kratos/v2/transport"
+	api2 "github.com/go-saas/kit-layout/api"
+	"github.com/go-saas/kit-layout/private/biz"
+	"github.com/go-saas/kit-layout/private/data"
+	"github.com/go-saas/kit/pkg/api"
+	"github.com/go-saas/kit/pkg/authz/authz"
+	kitdi "github.com/go-saas/kit/pkg/di"
+	"github.com/go-saas/kit/pkg/server"
+	"github.com/go-saas/saas"
+	"github.com/go-saas/saas/seed"
+	"github.com/go-saas/uow"
+	"github.com/goava/di"
 )
 
 // ProviderSet is server providers.
-var ProviderSet = wire.NewSet(NewHTTPServer, NewGRPCServer, NewSeeder, wire.Value(ClientName))
+var ProviderSet = kitdi.NewSet(
+	NewAuthorizationOption,
+	kitdi.NewProvider(NewHTTPServer, di.As(new(transport.Server))),
+	kitdi.NewProvider(NewGRPCServer, di.As(new(transport.Server))),
+	NewSeeder,
+	NewSeeding,
+	kitdi.Value(ClientName))
 
 var ClientName api.ClientName = api2.ServiceName
 
-func NewSeeder(uow uow.Manager, migrate *data.Migrate, post *biz.PostSeeder) seed.Seeder {
-	return seed.NewDefaultSeeder(seed.NewUowContributor(uow, seed.Chain(migrate, post)))
+func NewSeeding(uow uow.Manager, migrate *data.Migrate, post *biz.PostSeeder) seed.Contrib {
+	return seed.Chain(server.NewUowContrib(uow, seed.Chain(migrate, post)))
+}
+
+func NewSeeder(ts saas.TenantStore, seeds []seed.Contrib) seed.Seeder {
+	res := seed.NewDefaultSeeder(server.NewTraceContrib(server.SeedChangeTenant(ts, seeds...)))
+	return res
+}
+
+func NewAuthorizationOption() *authz.Option {
+	return authz.NewAuthorizationOption()
 }

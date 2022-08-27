@@ -3,7 +3,7 @@ syntax = "proto3";
 package post.v1;
 import "errors/errors.proto";
 
-option go_package = "github.com/goxiaoy/kit-saas-layout/api/post/v1;v1";
+option go_package = "github.com/go-saas/kit-layout/api/post/v1;v1";
 
 enum ErrorReason {
   option (errors.default_code) = 500;

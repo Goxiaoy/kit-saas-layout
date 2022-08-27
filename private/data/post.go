@@ -3,11 +3,11 @@ package data
 import (
 	"context"
 	"fmt"
+	v1 "github.com/go-saas/kit-layout/api/post/v1"
+	"github.com/go-saas/kit-layout/private/biz"
+	kitgorm "github.com/go-saas/kit/pkg/gorm"
+	sgorm "github.com/go-saas/saas/gorm"
 	"github.com/goxiaoy/go-eventbus"
-	kitgorm "github.com/goxiaoy/go-saas-kit/pkg/gorm"
-	sgorm "github.com/goxiaoy/go-saas/gorm"
-	v1 "github.com/goxiaoy/kit-saas-layout/api/post/v1"
-	"github.com/goxiaoy/kit-saas-layout/private/biz"
 	"gorm.io/gorm"
 )
 
