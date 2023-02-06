@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package post.v1;
+package kit_layout.post.v1;
 import "errors/errors.proto";
 
 option go_package = "github.com/go-saas/kit-layout/api/post/v1;v1";

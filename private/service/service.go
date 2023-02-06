@@ -9,7 +9,8 @@ import (
 	khttp "github.com/go-kratos/kratos/v2/transport/http"
 	v12 "github.com/go-saas/kit-layout/api/post/v1"
 	kitdi "github.com/go-saas/kit/pkg/di"
-	"github.com/go-saas/kit/pkg/server"
+	kitgrpc "github.com/go-saas/kit/pkg/server/grpc"
+	kithttp "github.com/go-saas/kit/pkg/server/http"
 	"net/http"
 )
 
@@ -26,20 +27,20 @@ var ProviderSet = kitdi.NewSet(
 func NewHttpServerRegister(
 	resEncoder khttp.EncodeResponseFunc,
 	errEncoder khttp.EncodeErrorFunc,
-	post *PostService) server.HttpServiceRegister {
-	return server.HttpServiceRegisterFunc(func(srv *khttp.Server, middleware ...middleware.Middleware) {
+	post *PostService) kithttp.ServiceRegister {
+	return kithttp.ServiceRegisterFunc(func(srv *khttp.Server, middleware ...middleware.Middleware) {
 		v12.RegisterPostServiceHTTPServer(srv, post)
 
 		swaggerRouter := chi.NewRouter()
 		swaggerRouter.Use(
-			server.MiddlewareConvert(errEncoder, middleware...))
+			kithttp.MiddlewareConvert(errEncoder, middleware...))
 		const apiPrefix = "/v1/server/dev/swagger"
 		swaggerRouter.Handle(apiPrefix+"*", http.StripPrefix(apiPrefix, swaggerui.Handler(spec)))
 	})
 }
 
-func NewGrpcServerRegister(post *PostService) server.GrpcServiceRegister {
-	return server.GrpcServiceRegisterFunc(func(srv *grpc.Server, middleware ...middleware.Middleware) {
+func NewGrpcServerRegister(post *PostService) kitgrpc.ServiceRegister {
+	return kitgrpc.ServiceRegisterFunc(func(srv *grpc.Server, middleware ...middleware.Middleware) {
 		v12.RegisterPostServiceServer(srv, post)
 	})
 }

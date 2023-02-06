@@ -17,31 +17,21 @@ init:
 	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-breaking@$(BUF_VERSION)
 	go install github.com/bufbuild/buf/cmd/protoc-gen-buf-lint@$(BUF_VERSION)
 
-
-
-.PHONY: config
-# generate internal proto
-config:
-	buf generate . --path ./private/conf --template buf.config.gen.yaml
-	buf generate . --path ./event --template buf.config.gen.yaml
-
 .PHONY: api
 # generate api proto
 api:
-	buf generate . --path ./api
+	buf generate .
 
 .PHONY: build
 # build
 build:
 	mkdir -p bin/ && go build -ldflags "-X main.Version=$(VERSION)" -o ./bin/ ./...
 
-
 .PHONY: all
 # generate all
 all:
 	make init;
 	make api;
-	make config;
 
 # show help
 help:

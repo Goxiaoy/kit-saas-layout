@@ -17,6 +17,8 @@ import (
 	conf2 "github.com/go-saas/kit/pkg/conf"
 	"github.com/go-saas/kit/pkg/localize"
 	"github.com/go-saas/kit/pkg/server"
+	"github.com/go-saas/kit/pkg/server/common"
+	kithttp "github.com/go-saas/kit/pkg/server/http"
 	"github.com/go-saas/saas"
 	shttp "github.com/go-saas/saas/http"
 	uow2 "github.com/go-saas/uow"
@@ -35,10 +37,11 @@ func NewHTTPServer(c *conf2.Services,
 	mOpt *shttp.WebMultiTenancyOption,
 	apiOpt *api2.Option,
 	validator sapi.TrustedContextValidator,
-	register []server.HttpServiceRegister,
+	register []kithttp.ServiceRegister,
 	logger log.Logger) *khttp.Server {
 	var opts []khttp.ServerOption
-	opts = server.PatchHttpOpts(logger, opts, api.ServiceName, c, sCfg, reqDecoder, resEncoder, errEncoder)
+	cfg := common.GetConf(c, api.ServiceName)
+	opts = kithttp.PatchOpts(logger, opts, cfg, sCfg, reqDecoder, resEncoder, errEncoder)
 	m := []middleware.Middleware{
 		recovery.Recovery(),
 		tracing.Server(),
@@ -49,7 +52,7 @@ func NewHTTPServer(c *conf2.Services,
 		jwt.ServerExtractAndAuth(tokenizer, logger),
 		sapi.ServerPropagation(apiOpt, validator, logger),
 		server.Saas(mOpt, ts, validator),
-		kuow.Uow(uowMgr, kuow.WithLogger(logger)),
+		kuow.Uow(uowMgr),
 	}
 	opts = append(opts, []khttp.ServerOption{
 		khttp.Middleware(
@@ -57,6 +60,6 @@ func NewHTTPServer(c *conf2.Services,
 		),
 	}...)
 	srv := khttp.NewServer(opts...)
-	server.ChainHttpServiceRegister(register...).Register(srv, m...)
+	kithttp.ChainServiceRegister(register...).Register(srv, m...)
 	return srv
 }

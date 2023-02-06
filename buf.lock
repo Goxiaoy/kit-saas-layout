@@ -4,4 +4,4 @@ deps:
   - remote: buf.build
     owner: goxy
     repository: go-saas-kit
-    commit: 0d8ec41fc74d47b7a54de037116bbd6c
+    commit: e7f5144a59124fffad111fe37d0878ef

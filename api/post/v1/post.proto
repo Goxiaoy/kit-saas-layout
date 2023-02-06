@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package post.v1;
+package kit_layout.post.v1;
 
 import "google/protobuf/timestamp.proto";
 import "google/api/annotations.proto";

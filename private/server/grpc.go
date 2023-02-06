@@ -16,6 +16,8 @@ import (
 	conf2 "github.com/go-saas/kit/pkg/conf"
 	"github.com/go-saas/kit/pkg/localize"
 	"github.com/go-saas/kit/pkg/server"
+	"github.com/go-saas/kit/pkg/server/common"
+	kitgrpc "github.com/go-saas/kit/pkg/server/grpc"
 	"github.com/go-saas/saas"
 	shttp "github.com/go-saas/saas/http"
 	uow2 "github.com/go-saas/uow"
@@ -32,7 +34,7 @@ func NewGRPCServer(
 	apiOpt *api2.Option,
 	validator sapi.TrustedContextValidator,
 	logger log.Logger,
-	register []server.GrpcServiceRegister,
+	register []kitgrpc.ServiceRegister,
 ) *grpc.Server {
 	m := []middleware.Middleware{
 		recovery.Recovery(),
@@ -44,15 +46,16 @@ func NewGRPCServer(
 		jwt.ServerExtractAndAuth(tokenizer, logger),
 		sapi.ServerPropagation(apiOpt, validator, logger),
 		server.Saas(mOpt, ts, validator),
-		kuow.Uow(uowMgr, kuow.WithLogger(logger)),
+		kuow.Uow(uowMgr),
 	}
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			m...,
 		),
 	}
-	opts = server.PatchGrpcOpts(logger, opts, api.ServiceName, c)
+	cfg := common.GetConf(c, api.ServiceName)
+	opts = kitgrpc.PatchOpts(logger, opts, cfg)
 	srv := grpc.NewServer(opts...)
-	server.ChainGrpcServiceRegister(register...).Register(srv, m...)
+	kitgrpc.ChainServiceRegister(register...).Register(srv, m...)
 	return srv
 }
