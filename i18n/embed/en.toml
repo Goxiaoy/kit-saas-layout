@@ -1,0 +1,6 @@
+[permission.github.com/go-saas/kit-layout.post.group]
+other = "Post"
+[permission.github.com/go-saas/kit-layout.post.read]
+other = "Read Post"
+[permission.github.com/go-saas/kit-layout.post.write]
+other = "Write Post"

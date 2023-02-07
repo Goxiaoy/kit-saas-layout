@@ -1,0 +1,14 @@
+groups:
+
+  - name: "permission.github.com/go-saas/kit-layout.post.group"
+    def:
+      - name: "permission.github.com/go-saas/kit-layout.post.any"
+        namespace: "github.com/go-saas/kit-layout.post"
+        action: "*"
+        internal: true
+      - name: "permission.permission.read"
+        namespace: "github.com/go-saas/kit-layout.post"
+        action: "read"
+      - name: "permission.permission.write"
+        namespace: "github.com/go-saas/kit-layout.post"
+        action: "write"

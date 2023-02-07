@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/go-kratos/kratos/v2/errors"
+	"github.com/go-saas/kit-layout/api"
 	pb "github.com/go-saas/kit-layout/api/post/v1"
 	"github.com/go-saas/kit-layout/private/biz"
 	"github.com/go-saas/kit/pkg/authz/authz"
@@ -21,6 +22,9 @@ func NewPostService(repo biz.PostRepo, auth authz.Service) *PostService {
 }
 
 func (s *PostService) ListPost(ctx context.Context, req *pb.ListPostRequest) (*pb.ListPostReply, error) {
+	if _, err := s.auth.Check(ctx, authz.NewEntityResource(api.ResourcePost, "*"), authz.ReadAction); err != nil {
+		return nil, err
+	}
 	ret := &pb.ListPostReply{}
 
 	totalCount, filterCount, err := s.repo.Count(ctx, req)
@@ -44,6 +48,9 @@ func (s *PostService) ListPost(ctx context.Context, req *pb.ListPostRequest) (*p
 	return ret, nil
 }
 func (s *PostService) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.Post, error) {
+	if _, err := s.auth.Check(ctx, authz.NewEntityResource(api.ResourcePost, req.GetId()), authz.ReadAction); err != nil {
+		return nil, err
+	}
 	g, err := s.repo.Get(ctx, req.GetId())
 	if err != nil {
 		return nil, err
@@ -56,6 +63,9 @@ func (s *PostService) GetPost(ctx context.Context, req *pb.GetPostRequest) (*pb.
 	return res, nil
 }
 func (s *PostService) CreatePost(ctx context.Context, req *pb.CreatePostRequest) (*pb.Post, error) {
+	if _, err := s.auth.Check(ctx, authz.NewEntityResource(api.ResourcePost, "*"), authz.WriteAction); err != nil {
+		return nil, err
+	}
 	e := &biz.Post{}
 	MapCreatePbPost2Biz(req, e)
 	err := s.repo.Create(ctx, e)
@@ -67,6 +77,9 @@ func (s *PostService) CreatePost(ctx context.Context, req *pb.CreatePostRequest)
 	return res, nil
 }
 func (s *PostService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest) (*pb.Post, error) {
+	if _, err := s.auth.Check(ctx, authz.NewEntityResource(api.ResourcePost, req.Post.Id), authz.WriteAction); err != nil {
+		return nil, err
+	}
 	g, err := s.repo.Get(ctx, req.Post.Id)
 	if err != nil {
 		return nil, err
@@ -83,7 +96,11 @@ func (s *PostService) UpdatePost(ctx context.Context, req *pb.UpdatePostRequest)
 	MapBizPost2Pb(g, res)
 	return res, nil
 }
+
 func (s *PostService) DeletePost(ctx context.Context, req *pb.DeletePostRequest) (*pb.DeletePostReply, error) {
+	if _, err := s.auth.Check(ctx, authz.NewEntityResource(api.ResourcePost, req.Id), authz.WriteAction); err != nil {
+		return nil, err
+	}
 	g, err := s.repo.Get(ctx, req.Id)
 	if err != nil {
 		return nil, err

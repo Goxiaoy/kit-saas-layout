@@ -1,0 +1,6 @@
+[permission.github.com/go-saas/kit-layout.post.group]
+other = "文章"
+[permission.github.com/go-saas/kit-layout.post.read]
+other = "读物文章"
+[permission.github.com/go-saas/kit-layout.post.write]
+other = "增加/修改/删除 文章"
