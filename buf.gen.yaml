@@ -9,6 +9,10 @@ plugins:
   - name: go-grpc
     out: ./
     opt: paths=source_relative
+  - name: go-grpc-proxy
+    out: ./buf
+    opt:
+      - paths=source_relative
   - name: validate
     out: ./
     opt:

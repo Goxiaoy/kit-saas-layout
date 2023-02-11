@@ -19,11 +19,11 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationPostServiceCreatePost = "/kit_layout.post.v1.PostService/CreatePost"
-const OperationPostServiceDeletePost = "/kit_layout.post.v1.PostService/DeletePost"
-const OperationPostServiceGetPost = "/kit_layout.post.v1.PostService/GetPost"
-const OperationPostServiceListPost = "/kit_layout.post.v1.PostService/ListPost"
-const OperationPostServiceUpdatePost = "/kit_layout.post.v1.PostService/UpdatePost"
+const OperationPostServiceCreatePost = "/kit_layout.api.post.v1.PostService/CreatePost"
+const OperationPostServiceDeletePost = "/kit_layout.api.post.v1.PostService/DeletePost"
+const OperationPostServiceGetPost = "/kit_layout.api.post.v1.PostService/GetPost"
+const OperationPostServiceListPost = "/kit_layout.api.post.v1.PostService/ListPost"
+const OperationPostServiceUpdatePost = "/kit_layout.api.post.v1.PostService/UpdatePost"
 
 type PostServiceHTTPServer interface {
 	CreatePost(context.Context, *CreatePostRequest) (*Post, error)

@@ -7,13 +7,15 @@ require (
 	github.com/flowchartsman/swaggerui v0.0.0-20210303154956-0e71c297862e
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-kratos/kratos/v2 v2.5.4
-	github.com/go-saas/kit v0.0.5-0.20230203162617-c06671896a04
+	github.com/go-saas/kit v0.0.5-0.20230211072427-f570e1e62216
 	github.com/go-saas/saas v0.6.0
 	github.com/go-saas/uow v0.0.7
 	github.com/goava/di v1.11.1
 	github.com/goxiaoy/go-eventbus v0.0.5
+	github.com/goxiaoy/vfs v0.0.0-20230130063220-b20a45e86d37
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.3
 	github.com/samber/lo v1.28.2
+	github.com/spf13/afero v1.9.3
 	google.golang.org/genproto v0.0.0-20220930163606-c98284e70a91
 	google.golang.org/grpc v1.49.0
 	google.golang.org/protobuf v1.28.1
@@ -54,7 +56,6 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fclairamb/afero-s3 v0.3.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
-	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-kratos/kratos/contrib/log/zap/v2 v2.0.0-20220927151429-0ecc2b422f28 // indirect
 	github.com/go-kratos/kratos/contrib/registry/consul/v2 v2.0.0-20220927151429-0ecc2b422f28 // indirect
 	github.com/go-kratos/kratos/contrib/registry/etcd/v2 v2.0.0-20220927151429-0ecc2b422f28 // indirect
@@ -80,7 +81,6 @@ require (
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect
-	github.com/goxiaoy/vfs v0.0.0-20230130063220-b20a45e86d37 // indirect
 	github.com/gsterjov/go-libsecret v0.0.0-20161001094733-a6f4afe4910c // indirect
 	github.com/hashicorp/consul/api v1.15.2 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -134,7 +134,6 @@ require (
 	github.com/rcrowley/go-metrics v0.0.0-20201227073835-cf1acfcdf475 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/twpayne/go-geom v1.4.4 // indirect
@@ -177,4 +176,3 @@ require (
 	gorm.io/driver/sqlite v1.4.4 // indirect
 	k8s.io/apimachinery v0.25.2 // indirect
 )
-

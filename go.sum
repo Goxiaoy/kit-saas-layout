@@ -278,8 +278,8 @@ github.com/go-resty/resty/v2 v2.7.0 h1:me+K9p3uhSmXtrBZ4k9jcEAfJmuC8IivWHwaLZwPr
 github.com/go-resty/resty/v2 v2.7.0/go.mod h1:9PWDzw47qPphMRFfhsyk0NnSgvluHcljSMVIq3w7q0I=
 github.com/go-saas/go-i18n/v2 v2.2.1 h1:QWZWOQ6UbPgR4neO84v9lJVTiS6R6qjDASpExZxOZkQ=
 github.com/go-saas/go-i18n/v2 v2.2.1/go.mod h1:wL5DUk8vU9KKTxYfWlvAsnPERejHO6+kIKiwvIQwgnc=
-github.com/go-saas/kit v0.0.5-0.20230203162617-c06671896a04 h1:+JRpzLwGjyV22Kg1P8anERISGHyuzl9HKMPBfcTxHMg=
-github.com/go-saas/kit v0.0.5-0.20230203162617-c06671896a04/go.mod h1:LX2UFrGqdkE9uJlhinjzRGjiWVA0Wj0HssEziP/z1fU=
+github.com/go-saas/kit v0.0.5-0.20230211072427-f570e1e62216 h1:F6K8OdUVeEMX1XUDv+Na8AZx6LltL5mUAOTPWcsA3Ww=
+github.com/go-saas/kit v0.0.5-0.20230211072427-f570e1e62216/go.mod h1:LX2UFrGqdkE9uJlhinjzRGjiWVA0Wj0HssEziP/z1fU=
 github.com/go-saas/lazy v1.0.0 h1:kh0eBDeWOGCf19fcaSOqbYYQZi+sLYZOU2g+ygj719c=
 github.com/go-saas/lazy v1.0.0/go.mod h1:92+YKljqZX8FB2yVKfORICn/mCgCzsJL/6V0O6oP9oo=
 github.com/go-saas/lbs v0.0.2 h1:LD/naozXUDaWPq2LLkIe7oCtWupr682kbyz2MrSNXWI=
