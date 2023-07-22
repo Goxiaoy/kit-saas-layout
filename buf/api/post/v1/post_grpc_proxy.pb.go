@@ -18,12 +18,6 @@ const _ = grpc.SupportPackageIsVersion7
 
 var _ PostServiceServer = (*postServiceClientProxy)(nil)
 
-const GrpcOperationPostServiceListPost = "/kit_layout.api.post.v1.PostService/ListPost"
-const GrpcOperationPostServiceGetPost = "/kit_layout.api.post.v1.PostService/GetPost"
-const GrpcOperationPostServiceCreatePost = "/kit_layout.api.post.v1.PostService/CreatePost"
-const GrpcOperationPostServiceUpdatePost = "/kit_layout.api.post.v1.PostService/UpdatePost"
-const GrpcOperationPostServiceDeletePost = "/kit_layout.api.post.v1.PostService/DeletePost"
-
 // postServiceClientProxy is the proxy to turn PostService client to server interface.
 type postServiceClientProxy struct {
 	cc PostServiceClient
